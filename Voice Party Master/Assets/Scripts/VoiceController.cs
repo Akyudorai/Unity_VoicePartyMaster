@@ -52,7 +52,15 @@ public class VoiceController : MonoBehaviour
         VoiceCommands.Commands.Add("interact", new Action<int,string>(Interact));
         VoiceCommands.Commands.Add("stop", new Action<int,string>(Stop));    
 
-        VoiceCommands.Commands.Add("test", new Action<int,string>(Test));   
+        VoiceCommands.Commands.Add("test", new Action<int,string>(Test));
+        VoiceCommands.Commands.Add("debug", new Action<int, string>(DebugCommands));   
+    }
+
+    private void DebugCommands(int order, string prevKeyword)
+    {
+       foreach (KeyValuePair<string, Delegate> pair in VoiceCommands.Commands) {
+            Debug.Log(pair.Key);
+        }
     }
 
     private void Test(int order, string prevKeyword) 

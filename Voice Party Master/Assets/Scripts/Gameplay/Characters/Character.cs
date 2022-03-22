@@ -15,7 +15,7 @@ public enum PrimaryDamageType {
 public class Character
 {	
 	// Actions
-	public Dictionary<string, Action> Actions = new Dictionary<string, Action>();	
+	public Dictionary<string, Delegate> Actions = new Dictionary<string, Delegate>();	
     
 	// Variables
 	public bool isSelected = false;
@@ -23,10 +23,17 @@ public class Character
 	protected CharacterStats base_stats;
 	protected PrimaryDamageType damageType;
 
+	protected Animator animator;
+
 	// Getters
 	public string GetName() {return characterName; }	 
 	public CharacterStats GetStats() { return base_stats; }
 	public PrimaryDamageType GetDamageType() { return damageType; }
+
+	// Setters
+	public void SetAnimator(Animator reference) {
+		animator = reference;
+	}
 
 	// Static Functions
 	public static Character Load(CharacterClass characterClass) 

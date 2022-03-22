@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class Archer : Character
 {
     public Archer() {
@@ -34,14 +34,15 @@ public class Archer : Character
         };
 
         // Character Commands
-        Actions.Add("Aimed Shot", AimedShot);
-        Actions.Add("Multi Shot", MultiShot);
-        Actions.Add("Rapid Fire", RapidFire);
-        Actions.Add("Disengage", Disengage);
+        Actions.Add("aimed", new Action<int,string>(AimedShot));
+        Actions.Add("aim", new Action<int,string>(AimedShot));
+        Actions.Add("multishot", new Action<int,string>(MultiShot));
+        Actions.Add("rapid", new Action<int,string>(RapidFire));
+        Actions.Add("disengage", new Action<int,string>(Disengage));
     }
 
     // Aimed Shot, charge up a powerful shot
-    private void AimedShot() {
+    private void AimedShot(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
@@ -49,7 +50,7 @@ public class Archer : Character
     }
 
     // Multi-shot, shoot multiple arrows in a cone 
-    private void MultiShot() {
+    private void MultiShot(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
@@ -57,7 +58,7 @@ public class Archer : Character
     }
 
     // Rapid Fire, increase attack speed for a period of time
-    private void RapidFire() {
+    private void RapidFire(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
@@ -65,7 +66,7 @@ public class Archer : Character
     }
 
     // Disengage, move quickly in a target direction and reduce threat
-    private void Disengage() {
+    private void Disengage(int order, string prevKeyword) {
         if (!isSelected)
             return;
             

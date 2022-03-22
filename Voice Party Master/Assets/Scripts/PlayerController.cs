@@ -52,12 +52,14 @@ public class PlayerController : MonoBehaviour
 
         // Initialize the Character
         character = Character.Load(characterClass);
+        character.SetAnimator(animator);
 
         // Initialize Entity
         entity = new Entity(character.GetStats().Health);
+        entity.SetAnimator(animator);
 
         // Load Character Actions to Commands
-        foreach (KeyValuePair<string, Action> pair in character.Actions) {
+        foreach (KeyValuePair<string, Delegate> pair in character.Actions) {
             VoiceCommands.Commands.Add(pair.Key, pair.Value);
         }
     }

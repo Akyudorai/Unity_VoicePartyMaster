@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class Rogue : Character
 {
     public Rogue() {
@@ -34,41 +34,49 @@ public class Rogue : Character
         };
 
         // Character Commands
-        Actions.Add("Double Strike", DoubleStrike);
-        Actions.Add("Eviscerate", Eviscerate);
-        Actions.Add("Stealth", Stealth);
-        Actions.Add("Ambush", Ambush);
+        Actions.Add("double", new Action<int,string>(DoubleStrike));
+        Actions.Add("mutilate", new Action<int,string>(Mutilate));
+        Actions.Add("stealth", new Action<int,string>(Stealth));
+        Actions.Add("ambush", new Action<int,string>(Ambush));
     }
 
     // Double Strike, strike twice and gain a combo point
-    private void DoubleStrike() {
+    private void DoubleStrike(int order, string prevKeyword) {
         if (!isSelected)
             return;
+
+        animator.SetTrigger("A1");
 
         Debug.Log("Double Strike Activated");
     }
 
     // Eviscerate, spend combo points to deal large damage
-    private void Eviscerate() {
+    private void Mutilate(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
-        Debug.Log("Eviscerate Activated");
+        animator.SetTrigger("A2");
+
+        Debug.Log("Mutilate Activated");
     }
 
     // Stealth, go invisible to enemies and slow speed
-    private void Stealth() {
+    private void Stealth(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
+        animator.SetTrigger("A3");
+
         Debug.Log("Stealth Activated");
     }
 
     // Ambush, only usable from stealth, deal massive damage
-    private void Ambush() {
+    private void Ambush(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
+        animator.SetTrigger("A4");
+
         Debug.Log("Ambush Activated");
     }
 }

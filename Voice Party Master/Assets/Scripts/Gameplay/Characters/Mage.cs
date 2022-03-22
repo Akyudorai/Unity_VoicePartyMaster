@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Mage : Character
 {
@@ -34,41 +35,46 @@ public class Mage : Character
         };
 
         // Character Commands
-        Actions.Add("Fireball", Fireball);
-        Actions.Add("Arcane Nova", ArcaneNova);
-        Actions.Add("Blink", Blink);
-        Actions.Add("Blizzard", Blizzard);
+        Actions.Add("dragonbreath", new Action<int,string>(DragonsBreath));
+        Actions.Add("dragons", new Action<int,string>(DragonsBreath));
+        Actions.Add("burst", new Action<int,string>(FlameBurst));
+        Actions.Add("blast", new Action<int,string>(FireBlast));
+        Actions.Add("meteor", new Action<int,string>(Meteor));
     }
 
     // Fireball, shoot a fireball at a target
-    private void Fireball() {
+    private void DragonsBreath(int order, string prevKeyword) {
         if (!isSelected)
             return;
-            
-        Debug.Log("Fireball Activated");
+        
+        animator.SetTrigger("A1");
+        Debug.Log("Dragons Breath Activated");
     }
 
     // Arcane Nova, deal damage in an area around the Mage
-    private void ArcaneNova() {
+    private void FlameBurst(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
-        Debug.Log("Arcane Nova Activated");
+        animator.SetTrigger("A2");
+        Debug.Log("Flame Burst Activated");
     }
 
     // Blink, teleport a short distance in a target direction
-    private void Blink() {
+    private void FireBlast(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
-        Debug.Log("Blink Activated");
+        animator.SetTrigger("A3");
+        Debug.Log("Fire Blast Activated");
     }
 
     // Blizzard, channel an AoE damage over time spell at a target location
-    private void Blizzard() {
+    private void Meteor(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
-        Debug.Log("Blizzard Activated");
+        animator.SetTrigger("A4");
+        Debug.Log("Meteor Activated");
     }
 }

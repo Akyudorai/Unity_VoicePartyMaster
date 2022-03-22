@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 public class Priest : Character
 {
     public Priest() {
@@ -24,7 +24,7 @@ public class Priest : Character
             Attack_Speed = 1.0f,
 
             // Magical Stats
-            Spell_Power = 1,
+            Spell_Power = 100,
             Mana = 100.0f, 
             Mana_Regen = 1.0f,
 
@@ -34,41 +34,48 @@ public class Priest : Character
         };
 
         // Character Commands
-        Actions.Add("Heal", Heal);
-        Actions.Add("Barrier", Barrier);
-        Actions.Add("Ressurect", Ressurect);
-        Actions.Add("Holy Nova", HolyNova);
+        Actions.Add("heal", new Action<int,string>(Heal));
+        Actions.Add("barrier", new Action<int,string>(Barrier));
+        Actions.Add("resurrect", new Action<int,string>(Resurrect));
+        Actions.Add("nova", new Action<int,string>(HolyNova));
     }
 
     // Heal, a lesser healing ability that can be used frequently
-    private void Heal() {
+    private void Heal(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
+        animator.SetTrigger("A1");
+
         Debug.Log("Heal Activated");
     }
 
     // Barrier, create a protective barrier around a target
-    private void Barrier() {
+    private void Barrier(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
+        animator.SetTrigger("A2");
+
         Debug.Log("Barrier Activated");
     }
 
     // Ressurect, bring a fallen ally back to life
-    private void Ressurect() {
+    private void Resurrect(int order, string prevKeyword) {
         if (!isSelected)
             return;
             
-        Debug.Log("Ressurect Activated");
+        animator.SetTrigger("A3");
+
+        Debug.Log("Resurrect Activated");
     }
 
     // Holy Nova, an AoE heal around the Priest
-    private void HolyNova() {
+    private void HolyNova(int order, string prevKeyword) {
         if (!isSelected)
             return;
-            
+
+        animator.SetTrigger("A4");
         Debug.Log("Holy Nova Activated");
     }
 }
