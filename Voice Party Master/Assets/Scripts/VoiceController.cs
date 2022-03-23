@@ -5,6 +5,8 @@ using System;
 public class VoiceController : MonoBehaviour
 {   
     GameManager gm;
+    InterfaceManager im;
+
     public PlayerController selectedCharacter = null;
     public PlayerController warrior, rogue, archer, mage, priest;
 
@@ -17,6 +19,21 @@ public class VoiceController : MonoBehaviour
             Debug.LogError("GameManager script not found!");
         }
 
+        // Find Interface Manager
+        im = GameObject.Find("UI").GetComponent<InterfaceManager>();
+        if (im == null) {
+            Debug.LogError("InterfaceManager script not found!");
+        }   
+        
+        // Initialize IM;
+        im.Warrior = warrior.entity;
+        im.Rogue = rogue.entity;
+        im.Archer = archer.entity;
+        im.Mage = mage.entity;
+        im.Priest = priest.entity;
+        im.Initialize();
+
+        // Initialize Voice Commands
         // Motion Controls        
         VoiceCommands.Commands.Add("idle", new Action<int, string>(Idle));
         VoiceCommands.Commands.Add("walk", new Action<int, string>(Walk));
@@ -54,6 +71,8 @@ public class VoiceController : MonoBehaviour
 
         VoiceCommands.Commands.Add("test", new Action<int,string>(Test));
         VoiceCommands.Commands.Add("debug", new Action<int, string>(DebugCommands));   
+
+        SelectWarrior(1, "");
     }
 
     private void DebugCommands(int order, string prevKeyword)
@@ -115,6 +134,7 @@ public class VoiceController : MonoBehaviour
         } else {
             selectedCharacter.GetCharacter().isSelected = false;
             selectedCharacter = warrior;
+            im.SelectCharacter(warrior);
             selectedCharacter.GetCharacter().isSelected = true;
         }
         
@@ -127,6 +147,7 @@ public class VoiceController : MonoBehaviour
         } else {
             selectedCharacter.GetCharacter().isSelected = false;
             selectedCharacter = priest;
+            im.SelectCharacter(priest);
             selectedCharacter.GetCharacter().isSelected = true;
         }
     }
@@ -138,6 +159,7 @@ public class VoiceController : MonoBehaviour
         } else {
             selectedCharacter.GetCharacter().isSelected = false;
             selectedCharacter = rogue;
+            im.SelectCharacter(rogue);
             selectedCharacter.GetCharacter().isSelected = true;
         }
     }
@@ -149,6 +171,7 @@ public class VoiceController : MonoBehaviour
         } else {
             selectedCharacter.GetCharacter().isSelected = false;
             selectedCharacter = mage;
+            im.SelectCharacter(mage);
             selectedCharacter.GetCharacter().isSelected = true;
         }
     }
@@ -160,6 +183,7 @@ public class VoiceController : MonoBehaviour
         } else {
             selectedCharacter.GetCharacter().isSelected = false;
             selectedCharacter = archer;
+            im.SelectCharacter(archer);
             selectedCharacter.GetCharacter().isSelected = true;
         }
     }

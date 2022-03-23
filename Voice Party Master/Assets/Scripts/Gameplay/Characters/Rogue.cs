@@ -20,7 +20,7 @@ public class Rogue : Character
             Resistance = 1,
 
             // Physical Stats
-            Attack_Power = 1,
+            Attack_Power = 5,
             Attack_Speed = 1.0f,
 
             // Magical Stats
@@ -33,11 +33,45 @@ public class Rogue : Character
             Critical_Damage = 2.0f,
         };
 
+        // Ability Data
+        Abilities.Add("A1", new AbilityData() {
+            Name = "Double Strike",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A2", new AbilityData() {
+            Name = "Mutilate",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A3", new AbilityData() {
+            Name = "Stealth",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A4", new AbilityData() {
+            Name = "Ambush",
+            CD = 12.0f,
+            currCD = 0.0f
+        });
+
         // Character Commands
         Actions.Add("double", new Action<int,string>(A1_Buffer));
         Actions.Add("mutilate", new Action<int,string>(A2_Buffer));
         Actions.Add("stealth", new Action<int,string>(A3_Buffer));
         Actions.Add("ambush", new Action<int,string>(A4_Buffer));
+
+        // Sound Effects
+        Sounds.Add("attack", Resources.Load<AudioClip>("Audio/Rogue/Attack"));
+
+        // UI
+        Icons.Add("A1", Resources.Load<Sprite>("Icons/Rogue/Double_Strike"));
+        Icons.Add("A2", Resources.Load<Sprite>("Icons/Rogue/Mutilate"));
+        Icons.Add("A3", Resources.Load<Sprite>("Icons/Rogue/Stealth"));
+        Icons.Add("A4", Resources.Load<Sprite>("Icons/Rogue/Ambush"));
     }
 
     // ============================================================
@@ -49,13 +83,18 @@ public class Rogue : Character
     override public void A1(AbilitySettings settings) 
     {        
         // Deal Damage to the Target based on Attack Power
-        float amount = GetStats().Attack_Power * 0.575f;             
+        float amount = GetStats().Attack_Power * 1.0f;             
         settings.target.DealDamage(amount); 
 
         // Add a combo point
         if (animator.GetInteger("Combo Points") < 5) {
             animator.SetInteger("Combo Points", animator.GetInteger("Combo Points") + 1);
         }
+
+        // Set Cooldown
+        AbilityData A1 = Abilities["A1"];
+        A1.currCD = A1.CD;
+        Abilities["A1"] = A1;
 
         Debug.Log("Double Strike Activated");       
     }
@@ -64,12 +103,17 @@ public class Rogue : Character
     override public void A2(AbilitySettings settings) 
     {
         // Deal damage to target based on attack power and number of combo points
-        float amount = GetStats().Attack_Power * 0.75f;
+        float amount = GetStats().Attack_Power * 1.0f;
         amount *= animator.GetInteger("Combo Points");                     
         settings.target.DealDamage(amount); 
 
         // Reset Combo Points
         animator.SetInteger("Combo Points", 0);
+
+        // Set Cooldown
+        AbilityData A2 = Abilities["A2"];
+        A2.currCD = A2.CD;
+        Abilities["A2"] = A2;
 
         Debug.Log("Mutilate Activated");
     }
@@ -88,6 +132,11 @@ public class Rogue : Character
             animator.SetBool("Stealthed", true);
         }
 
+        // Set Cooldown
+        AbilityData A3 = Abilities["A3"];
+        A3.currCD = A3.CD;
+        Abilities["A3"] = A3;
+
         Debug.Log("Stealth " + (animator.GetBool("Stealthed") ? "Activated" : "Deactivated"));
     }
 
@@ -101,6 +150,11 @@ public class Rogue : Character
         // Exit Stealth
         animator.SetTrigger("Unstealth");
         animator.SetBool("Stealthed", false);
+
+        // Set Cooldown
+        AbilityData A4 = Abilities["A4"];
+        A4.currCD = A4.CD;
+        Abilities["A4"] = A4;
 
         Debug.Log("Ambush Activated");
     }

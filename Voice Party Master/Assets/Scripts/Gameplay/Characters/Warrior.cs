@@ -21,7 +21,7 @@ public class Warrior : Character
             Resistance = 1,
 
             // Physical Stats
-            Attack_Power = 1,
+            Attack_Power = 7,
             Attack_Speed = 1.0f,
 
             // Magical Stats
@@ -34,12 +34,47 @@ public class Warrior : Character
             Critical_Damage = 2.0f,
         };
 
+        // Ability Data
+        Abilities.Add("A1", new AbilityData() {
+            Name = "Shield Slam",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A2", new AbilityData() {
+            Name = "Mocking Shout",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A3", new AbilityData() {
+            Name = "Charge",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A4", new AbilityData() {
+            Name = "Shield Wall",
+            CD = 12.0f,
+            currCD = 0.0f
+        });
+
         // Character Commands
         Actions.Add("slam", new Action<int,string>(A1_Buffer));
         Actions.Add("shout", new Action<int,string>(A2_Buffer));
         Actions.Add("taunt", new Action<int,string>(A2_Buffer));
         Actions.Add("charge", new Action<int,string>(A3_Buffer));
         Actions.Add("wall", new Action<int,string>(A4_Buffer));
+
+        // SFX
+        Sounds.Add("attack", Resources.Load<AudioClip>("Audio/Warrior/Attack"));
+
+        // UI
+        Icons.Add("A1", Resources.Load<Sprite>("Icons/Warrior/Shield_Slam"));
+        Icons.Add("A2", Resources.Load<Sprite>("Icons/Warrior/Mocking_Shout"));
+        Icons.Add("A3", Resources.Load<Sprite>("Icons/Warrior/Charge"));
+        Icons.Add("A4", Resources.Load<Sprite>("Icons/Warrior/Shield_Wall"));
+
     }
 
     // ============================================================
@@ -50,10 +85,13 @@ public class Warrior : Character
     override public void A1(AbilitySettings settings) 
     {
         // Deal Damage to the Target based on Attack Power and Defense
-        float amount = GetStats().Attack_Power * 0.75f + GetStats().Armor * 0.5f;             
+        float amount = GetStats().Attack_Power * 2 + GetStats().Armor * 1.5f;             
         settings.target.DealDamage(amount); 
 
         // Set Cooldown
+        AbilityData A1 = Abilities["A1"];
+        A1.currCD = A1.CD;
+        Abilities["A1"] = A1;
 
         Debug.Log("Shield Slam Activated");       
     }
@@ -64,6 +102,9 @@ public class Warrior : Character
         // Force a specified target to attack the Warrior.
 
         // Set Cooldown
+        AbilityData A2 = Abilities["A2"];
+        A2.currCD = A2.CD;
+        Abilities["A2"] = A2;
 
         Debug.Log("Mocking Shout Activated");
     }
@@ -74,6 +115,9 @@ public class Warrior : Character
         // Target, Engage, and Sprint at an increased speed.
 
         // Set Cooldown
+        AbilityData A3 = Abilities["A3"];
+        A3.currCD = A3.CD;
+        Abilities["A3"] = A3;
 
         Debug.Log("Charge Activated");
     }
@@ -84,6 +128,9 @@ public class Warrior : Character
         // Grant Defense Buff for X seconds
 
         // Set Cooldown
+        AbilityData A4 = Abilities["A4"];
+        A4.currCD = A4.CD;
+        Abilities["A4"] = A4;        
 
         Debug.Log("Shield Wall Activated");
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody rb; 
     private NavMeshAgent nmAgent;   
     private Animator animator;
+
+    public Animator GetAnimator() { return animator; }
 
 #region Enums
 
@@ -38,6 +41,7 @@ public class PlayerController : MonoBehaviour
     public Entity entity; // ----------------------------------------------  Manages Health
     public GameObject target; // ------------------  The Current Target of the Controller
     private float basicAttackTimer; // ------------------------------------  The timer that determines when the character can attack. 
+    public Delegate abilityBuffer;
 
     // GAME SYSTEMS
     [SerializeField] private RoomData currentRoom = null;
@@ -53,9 +57,11 @@ public class PlayerController : MonoBehaviour
         // Initialize the Character
         character = Character.Load(characterClass);
         character.SetAnimator(animator);
+        character.SetController(this);
 
         // Initialize Entity
         entity = new Entity(character.GetStats().Health);
+        entity.SetOwner(this);
         entity.SetAnimator(animator);
 
         // Load Character Actions to Commands
@@ -64,8 +70,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Update() 
+    private async void Update() 
     {    
+        if (entity.IsDead) return;
+
         // HANDLE MOTION
         ///////////////////////////////////////
         if (currentAction == ACTION.MOVE) 
@@ -87,6 +95,15 @@ public class PlayerController : MonoBehaviour
             // When in range, switch to attack action.
             else if (Vector3.Distance(transform.position, target.transform.position) <= character.GetStats().Attack_Range) 
             {
+                if (abilityBuffer != null) {
+
+                    // Cast the Ability
+                    abilityBuffer.DynamicInvoke(0, "");
+
+                    // Set Ability Buffer to null after done casting
+                    abilityBuffer = null;
+                }
+
                 SetAction(ACTION.ATTACK);              
             }
 
@@ -105,6 +122,20 @@ public class PlayerController : MonoBehaviour
         // Attack Speed Timer
         if (basicAttackTimer > 0) { 
             basicAttackTimer -= Time.deltaTime;
+        }
+
+        // Ability Cooldowns        
+        foreach (KeyValuePair<string, AbilityData> pair in character.Abilities.ToList())
+        {            
+            AbilityData data = pair.Value;            
+
+            if (data.currCD > 0) {
+                data.currCD -= Time.deltaTime;    
+            } else if (data.currCD < 0) {
+                data.currCD = 0;
+            }      
+
+            character.Abilities[pair.Key] = data;
         }
 
         // Look At Target
@@ -133,6 +164,9 @@ public class PlayerController : MonoBehaviour
 
     // Set Action
     public void SetAction(ACTION action) {
+
+        if (entity.IsDead) return;
+
         currentAction = action;
         animator.SetInteger("ActionType", (int)currentAction);
 
@@ -183,6 +217,9 @@ public class PlayerController : MonoBehaviour
     // Set NavMeshAgent target destination
     ///////////////////////////////////////////
     public void SetDestinationTarget(Vector3 target) {
+
+        if (entity.IsDead) return;
+
         nmAgent.SetDestination(target);
         currentAction = ACTION.MOVE;
         SetMovementSpeed(currentMovementSpeed);
@@ -192,6 +229,8 @@ public class PlayerController : MonoBehaviour
     ///////////////////////////////////////////
     public void SetMovementSpeed(MOVEMENT mov) 
     {
+        if (entity.IsDead) return;
+
         // Rogue Stealth Override
         if (characterClass == CharacterClass.Rogue && animator.GetBool("Stealthed"))
         {
@@ -228,7 +267,16 @@ public class PlayerController : MonoBehaviour
     ///////////////////////////////////////////
     public void SetTarget(GameObject obj) 
     {
+        if (entity.IsDead) return;
+
         target = obj;             
+    }
+
+
+    // Buffer an ability to be cast when conditions are met.    
+    public void BufferAbility(Delegate ability)
+    {
+        abilityBuffer = ability;
     }
 
     ////////////////////////////////////////////////////
@@ -237,7 +285,7 @@ public class PlayerController : MonoBehaviour
 
     // Set and Load Current Room Data
     public void SetRoom(RoomData room) 
-    {
+    {   
         currentRoom = room;
     }
 
@@ -249,6 +297,8 @@ public class PlayerController : MonoBehaviour
 
     public void Inspect() 
     {
+        if (entity.IsDead) return;
+
         if (target == null) {
             Debug.Log("Need a target first.");
             return;
@@ -262,6 +312,8 @@ public class PlayerController : MonoBehaviour
 
     public void Interact()
     {
+        if (entity.IsDead) return;
+
         if (target == null) {
             Debug.Log("Need a target first.");
             return;

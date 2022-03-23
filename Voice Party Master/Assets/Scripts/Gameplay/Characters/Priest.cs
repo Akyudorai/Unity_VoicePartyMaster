@@ -24,7 +24,7 @@ public class Priest : Character
             Attack_Speed = 1.0f,
 
             // Magical Stats
-            Spell_Power = 100,
+            Spell_Power = 4,
             Mana = 100.0f, 
             Mana_Regen = 1.0f,
 
@@ -33,11 +33,45 @@ public class Priest : Character
             Critical_Damage = 2.0f,
         };
 
+        // Ability Data
+        Abilities.Add("A1", new AbilityData() {
+            Name = "Heal",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A2", new AbilityData() {
+            Name = "Barrier",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A3", new AbilityData() {
+            Name = "Resurrect",
+            CD = 60.0f,
+            currCD = 0.0f
+        });
+
+        Abilities.Add("A4", new AbilityData() {
+            Name = "Holy Nova",
+            CD = 6.0f,
+            currCD = 0.0f
+        });
+
         // Character Commands
         Actions.Add("heal", new Action<int,string>(A1_Buffer));
         Actions.Add("barrier", new Action<int,string>(A2_Buffer));
         Actions.Add("resurrect", new Action<int,string>(A3_Buffer));
         Actions.Add("nova", new Action<int,string>(A4_Buffer));
+
+        // SFX
+        Sounds.Add("attack", Resources.Load<AudioClip>("Audio/Priest/Attack"));
+
+        // UI
+        Icons.Add("A1", Resources.Load<Sprite>("Icons/Priest/Heal"));
+        Icons.Add("A2", Resources.Load<Sprite>("Icons/Priest/Barrier"));
+        Icons.Add("A3", Resources.Load<Sprite>("Icons/Priest/Resurrect"));
+        Icons.Add("A4", Resources.Load<Sprite>("Icons/Priest/Holy_Nova"));
     }
 
     // ============================================================
@@ -48,8 +82,13 @@ public class Priest : Character
     override public void A1(AbilitySettings settings) 
     {
         // Restores health to a target ally.
+        float amount = GetStats().Spell_Power * 2.5f;             
+        settings.target.DealDamage(-amount); 
 
         // Set Cooldown
+        AbilityData A1 = Abilities["A1"];
+        A1.currCD = A1.CD;
+        Abilities["A1"] = A1;
 
         Debug.Log("Heal Activated");
     }
@@ -60,6 +99,9 @@ public class Priest : Character
         // Give a target ally a shield buff that absorbs damage.
 
         // Set Cooldown
+        AbilityData A2 = Abilities["A2"];
+        A2.currCD = A2.CD;
+        Abilities["A2"] = A2;
 
         Debug.Log("Barrier Activated");
     }
@@ -68,8 +110,16 @@ public class Priest : Character
     override public void A3(AbilitySettings settings)
     {
         // Bring a fallen ally back to life
+        if (settings.target.IsDead) {
+            settings.target.IsDead = false;
+            settings.target.SetCurrentHealth(settings.target.GetMaxHealth() * (3/10));
+            settings.target.GetAnimator().SetTrigger("Resurrect");
+        }
 
         // Set Cooldown
+        AbilityData A3 = Abilities["A3"];
+        A3.currCD = A3.CD;
+        Abilities["A3"] = A3;
 
         Debug.Log("Resurrect Activated");
     }
@@ -80,6 +130,9 @@ public class Priest : Character
         // Deal damage to all enemies and heal all allies in an area around the Priest
 
         // Set cooldown
+        AbilityData A4 = Abilities["A4"];
+        A4.currCD = A4.CD;
+        Abilities["A4"] = A4;
 
         Debug.Log("Holy Nova Activated");
     }
