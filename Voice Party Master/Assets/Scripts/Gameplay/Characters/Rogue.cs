@@ -34,49 +34,96 @@ public class Rogue : Character
         };
 
         // Character Commands
-        Actions.Add("double", new Action<int,string>(DoubleStrike));
-        Actions.Add("mutilate", new Action<int,string>(Mutilate));
-        Actions.Add("stealth", new Action<int,string>(Stealth));
-        Actions.Add("ambush", new Action<int,string>(Ambush));
+        Actions.Add("double", new Action<int,string>(A1_Buffer));
+        Actions.Add("mutilate", new Action<int,string>(A2_Buffer));
+        Actions.Add("stealth", new Action<int,string>(A3_Buffer));
+        Actions.Add("ambush", new Action<int,string>(A4_Buffer));
     }
 
-    // Double Strike, strike twice and gain a combo point
-    private void DoubleStrike(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
+    // ============================================================
+    // ABILITY FUNCTIONALITY OVERRIDES
+    // ============================================================
 
-        animator.SetTrigger("A1");
+    // Double Strike
+    // ** GETS CALLED TWICE PER ABILITY CAST ** //
+    override public void A1(AbilitySettings settings) 
+    {        
+        // Deal Damage to the Target based on Attack Power
+        float amount = GetStats().Attack_Power * 0.575f;             
+        settings.target.DealDamage(amount); 
 
-        Debug.Log("Double Strike Activated");
+        // Add a combo point
+        if (animator.GetInteger("Combo Points") < 5) {
+            animator.SetInteger("Combo Points", animator.GetInteger("Combo Points") + 1);
+        }
+
+        Debug.Log("Double Strike Activated");       
     }
 
-    // Eviscerate, spend combo points to deal large damage
-    private void Mutilate(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A2");
+    // Mutilate
+    override public void A2(AbilitySettings settings) 
+    {
+        // Deal damage to target based on attack power and number of combo points
+        float amount = GetStats().Attack_Power * 0.75f;
+        amount *= animator.GetInteger("Combo Points");                     
+        settings.target.DealDamage(amount); 
+
+        // Reset Combo Points
+        animator.SetInteger("Combo Points", 0);
 
         Debug.Log("Mutilate Activated");
     }
 
-    // Stealth, go invisible to enemies and slow speed
-    private void Stealth(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A3");
+    // Stealth
+    override public void A3(AbilitySettings settings)
+    {
+        // Change Material/Shader to indicate stealthed.
 
-        Debug.Log("Stealth Activated");
+        // Switch Animation State
+        if (animator.GetBool("Stealthed")) {
+            animator.SetTrigger("Unstealth");
+            animator.SetBool("Stealthed", false);
+        } else {
+            animator.SetTrigger("A3");
+            animator.SetBool("Stealthed", true);
+        }
+
+        Debug.Log("Stealth " + (animator.GetBool("Stealthed") ? "Activated" : "Deactivated"));
     }
 
-    // Ambush, only usable from stealth, deal massive damage
-    private void Ambush(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A4");
+    // Ambush
+    override public void A4(AbilitySettings settings)
+    {
+        // Deal Damage to the Target based on Attack Power
+        float amount = GetStats().Attack_Power * 2.25f;             
+        settings.target.DealDamage(amount); 
+
+        // Exit Stealth
+        animator.SetTrigger("Unstealth");
+        animator.SetBool("Stealthed", false);
 
         Debug.Log("Ambush Activated");
+    }
+
+    // ============================================================
+    // ABILITY BUFFER OVERRIDES
+    // ============================================================
+
+    override protected void A2_Buffer(int order, string prevKeyword) 
+    {
+        // Must have at least one combo point to use the ability.
+        if (animator.GetInteger("Combo Points") == 0) {
+            Debug.Log("I need combo points to use that ability.");
+            return;
+        }
+    }
+    
+    override protected void A4_Buffer(int order, string prevKeyword) 
+    {   
+        // Must be stealthed to use the ability.
+        if (!animator.GetBool("Stealthed")) {
+            Debug.Log("I must be stealthed to use that ability.");
+            return;
+        }
     }
 }

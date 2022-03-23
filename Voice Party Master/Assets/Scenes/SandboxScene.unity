@@ -734,6 +734,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Y-Bot Mesh
       objectReference: {fileID: 0}
+    - target: {fileID: 5176794390880497408, guid: e9e87024c8fe04943b7aa065bc2bce8b, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: b28cd96784f77124f8f0a247bedc4dc3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9e87024c8fe04943b7aa065bc2bce8b, type: 3}
 --- !u!4 &521357092 stripped
@@ -909,6 +913,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Y-Bot Mesh
       objectReference: {fileID: 0}
+    - target: {fileID: 5176794390880497408, guid: e9e87024c8fe04943b7aa065bc2bce8b, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ee54da1981a7f3f49b98292b251de98e, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e9e87024c8fe04943b7aa065bc2bce8b, type: 3}
 --- !u!4 &612785053 stripped

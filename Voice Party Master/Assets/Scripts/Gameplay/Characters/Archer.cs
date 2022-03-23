@@ -34,43 +34,59 @@ public class Archer : Character
         };
 
         // Character Commands
-        Actions.Add("aimed", new Action<int,string>(AimedShot));
-        Actions.Add("aim", new Action<int,string>(AimedShot));
-        Actions.Add("multishot", new Action<int,string>(MultiShot));
-        Actions.Add("rapid", new Action<int,string>(RapidFire));
-        Actions.Add("disengage", new Action<int,string>(Disengage));
+        Actions.Add("aimed", new Action<int,string>(A1_Buffer));
+        Actions.Add("aim", new Action<int,string>(A1_Buffer));
+        Actions.Add("multishot", new Action<int,string>(A2_Buffer));
+        Actions.Add("rapid", new Action<int,string>(A3_Buffer));
+        Actions.Add("disengage", new Action<int,string>(A4_Buffer));
     }
 
-    // Aimed Shot, charge up a powerful shot
-    private void AimedShot(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        Debug.Log("Aimed Shot Activated");
+    // ============================================================
+    // ABILITY FUNCTIONALITY OVERRIDES
+    // ============================================================
+
+    // Aimed Shot
+    override public void A1(AbilitySettings settings) 
+    {
+        // Deal Damage to the Target based on Attack Power
+        float amount = GetStats().Attack_Power * 2.0f;             
+        settings.target.DealDamage(amount); 
+
+        // Set Cooldown
+
+        Debug.Log("Aimed Shot Activated");  
     }
 
-    // Multi-shot, shoot multiple arrows in a cone 
-    private void MultiShot(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
+    // Multi-Shot
+    override public void A2(AbilitySettings settings) 
+    {
+        // Deal Damage to up to three Targets based on Attack Power
+        float amount = GetStats().Attack_Power * 0.575f;             
+        settings.target.DealDamage(amount); 
+
+        // Set Cooldown
+
         Debug.Log("Multi-Shot Activated");
     }
 
-    // Rapid Fire, increase attack speed for a period of time
-    private void RapidFire(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
+    // Rapid Fire
+    override public void A3(AbilitySettings settings)
+    {
+        // Grant a buff that increases attack speed for X Seconds.
+
+        // Set Cooldown
+
         Debug.Log("Rapid Fire Activated");
     }
 
-    // Disengage, move quickly in a target direction and reduce threat
-    private void Disengage(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
+    // Disengage
+    override public void A4(AbilitySettings settings)
+    {
+        // Jump away from target enemy.
+
+        // Set Cooldown
+
+        
         Debug.Log("Disengage Activated");
     }
-
 }

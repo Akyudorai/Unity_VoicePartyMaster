@@ -35,46 +35,56 @@ public class Mage : Character
         };
 
         // Character Commands
-        Actions.Add("dragonbreath", new Action<int,string>(DragonsBreath));
-        Actions.Add("dragons", new Action<int,string>(DragonsBreath));
-        Actions.Add("burst", new Action<int,string>(FlameBurst));
-        Actions.Add("blast", new Action<int,string>(FireBlast));
-        Actions.Add("meteor", new Action<int,string>(Meteor));
+        Actions.Add("dragonbreath", new Action<int,string>(A1_Buffer));
+        Actions.Add("dragons", new Action<int,string>(A1_Buffer));
+        Actions.Add("burst", new Action<int,string>(A2_Buffer));
+        Actions.Add("blast", new Action<int,string>(A3_Buffer));
+        Actions.Add("meteor", new Action<int,string>(A4_Buffer));
     }
 
-    // Fireball, shoot a fireball at a target
-    private void DragonsBreath(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-        
-        animator.SetTrigger("A1");
-        Debug.Log("Dragons Breath Activated");
+    // ============================================================
+    // ABILITY FUNCTIONALITY OVERRIDES
+    // ============================================================
+
+    // Dragons Breath
+    override public void A1(AbilitySettings settings) 
+    {
+        // Deal Damage to all targets in a line X number of times over Y seconds
+
+        // Set Cooldown
+
+        Debug.Log("Dragons Flame Activated");
     }
 
-    // Arcane Nova, deal damage in an area around the Mage
-    private void FlameBurst(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A2");
+    // Flame Burst
+    override public void A2(AbilitySettings settings) 
+    {
+        // Deal Damage to all targets in an area around the Mage
+
+        // Set Cooldown
+
         Debug.Log("Flame Burst Activated");
     }
 
-    // Blink, teleport a short distance in a target direction
-    private void FireBlast(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A3");
+    // Fire Blast
+    override public void A3(AbilitySettings settings)
+    {
+        // Deal Damage to a target dealing damage based on spell power
+        float amount = GetStats().Spell_Power * 2.5f;             
+        settings.target.DealDamage(amount); 
+
+        // Set Cooldown
+
         Debug.Log("Fire Blast Activated");
     }
 
-    // Blizzard, channel an AoE damage over time spell at a target location
-    private void Meteor(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A4");
+    // Meteor
+    override public void A4(AbilitySettings settings)
+    {
+        // Drop a meteor at a target location that deals damage to all targets within a radius.
+
+        // Set Cooldown
+
         Debug.Log("Meteor Activated");
     }
 }

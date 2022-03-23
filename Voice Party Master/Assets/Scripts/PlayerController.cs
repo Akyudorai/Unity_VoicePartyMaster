@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
      
     // COMBAT SYSTEMS
     public Entity entity; // ----------------------------------------------  Manages Health
-    [SerializeField] private GameObject target; // ------------------  The Current Target of the Controller
+    public GameObject target; // ------------------  The Current Target of the Controller
     private float basicAttackTimer; // ------------------------------------  The timer that determines when the character can attack. 
 
     // GAME SYSTEMS
@@ -116,11 +116,12 @@ public class PlayerController : MonoBehaviour
         if (currentAction == ACTION.ATTACK) {            
             if (basicAttackTimer <= 0) {
                 // Damage the target
-                float amount = (character.GetDamageType() == PrimaryDamageType.Physical) ? character.GetStats().Attack_Power * 1.0f : character.GetStats().Spell_Power * 0.35f;                
-                target.GetComponent<PlayerController>().entity.DealDamage(amount);
+                //float amount = (character.GetDamageType() == PrimaryDamageType.Physical) ? character.GetStats().Attack_Power * 1.0f : character.GetStats().Spell_Power * 0.35f;                
+                //target.GetComponent<PlayerController>().entity.DealDamage(amount);
                 basicAttackTimer = character.GetStats().Attack_Speed;
-
                 animator.SetTrigger("Attack");
+
+                
             }
         }
 
@@ -191,6 +192,15 @@ public class PlayerController : MonoBehaviour
     ///////////////////////////////////////////
     public void SetMovementSpeed(MOVEMENT mov) 
     {
+        // Rogue Stealth Override
+        if (characterClass == CharacterClass.Rogue && animator.GetBool("Stealthed"))
+        {
+            nmAgent.speed = 1.5f;
+            currentMovementSpeed = MOVEMENT.WALK;
+            animator.SetInteger("MoveType", (int)1);
+            return;
+        }
+
         switch(mov) {
             case MOVEMENT.IDLE:                
                 nmAgent.speed = 0.0f;          

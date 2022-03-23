@@ -35,51 +35,55 @@ public class Warrior : Character
         };
 
         // Character Commands
-        Actions.Add("slam", new Action<int,string>(ShieldSlam));
-        Actions.Add("shout", new Action<int,string>(Taunt));
-        Actions.Add("taunt", new Action<int,string>(Taunt));
-        Actions.Add("charge", new Action<int,string>(Charge));
-        Actions.Add("wall", new Action<int,string>(ShieldWall));
+        Actions.Add("slam", new Action<int,string>(A1_Buffer));
+        Actions.Add("shout", new Action<int,string>(A2_Buffer));
+        Actions.Add("taunt", new Action<int,string>(A2_Buffer));
+        Actions.Add("charge", new Action<int,string>(A3_Buffer));
+        Actions.Add("wall", new Action<int,string>(A4_Buffer));
     }
 
-    // Shield Slam, deal damage to target and stun them briefly
-    private void ShieldSlam(int order, string prevKeyword) {
-                
-        if (!isSelected)            
-            return;            
+    // ============================================================
+    // ABILITY FUNCTIONALITY OVERRIDES
+    // ============================================================
 
-        animator.SetTrigger("A1");
+    // Shield Slam
+    override public void A1(AbilitySettings settings) 
+    {
+        // Deal Damage to the Target based on Attack Power and Defense
+        float amount = GetStats().Attack_Power * 0.75f + GetStats().Armor * 0.5f;             
+        settings.target.DealDamage(amount); 
 
-        Debug.Log("Shield Slam Activated");
+        // Set Cooldown
+
+        Debug.Log("Shield Slam Activated");       
     }
 
-    // Taunt, force a target to attack the Warrior
-    private void Taunt(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
+    // Mocking Shout
+    override public void A2(AbilitySettings settings) 
+    {
+        // Force a specified target to attack the Warrior.
 
-        animator.SetTrigger("A2");
+        // Set Cooldown
 
-        Debug.Log("Taunt Activated");
+        Debug.Log("Mocking Shout Activated");
     }
 
-    // Charge, charge at a target forcing it to target you 
-    private void Charge(int order, string prevKeyword) {
-                
-        if (!isSelected)
-            return;
+    // Charge
+    override public void A3(AbilitySettings settings)
+    {
+        // Target, Engage, and Sprint at an increased speed.
 
-        animator.SetTrigger("A3");
+        // Set Cooldown
 
         Debug.Log("Charge Activated");
     }
 
-    // Shield Wall, take reduced damage for a period of time.
-    private void ShieldWall(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-        
-        animator.SetTrigger("A4");
+    // Shield Wall
+    override public void A4(AbilitySettings settings)
+    {
+        // Grant Defense Buff for X seconds
+
+        // Set Cooldown
 
         Debug.Log("Shield Wall Activated");
     }

@@ -34,48 +34,53 @@ public class Priest : Character
         };
 
         // Character Commands
-        Actions.Add("heal", new Action<int,string>(Heal));
-        Actions.Add("barrier", new Action<int,string>(Barrier));
-        Actions.Add("resurrect", new Action<int,string>(Resurrect));
-        Actions.Add("nova", new Action<int,string>(HolyNova));
+        Actions.Add("heal", new Action<int,string>(A1_Buffer));
+        Actions.Add("barrier", new Action<int,string>(A2_Buffer));
+        Actions.Add("resurrect", new Action<int,string>(A3_Buffer));
+        Actions.Add("nova", new Action<int,string>(A4_Buffer));
     }
 
-    // Heal, a lesser healing ability that can be used frequently
-    private void Heal(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A1");
+    // ============================================================
+    // ABILITY FUNCTIONALITY OVERRIDES
+    // ============================================================
+
+    // Heal
+    override public void A1(AbilitySettings settings) 
+    {
+        // Restores health to a target ally.
+
+        // Set Cooldown
 
         Debug.Log("Heal Activated");
     }
 
-    // Barrier, create a protective barrier around a target
-    private void Barrier(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A2");
+    // Barrier
+    override public void A2(AbilitySettings settings) 
+    {
+        // Give a target ally a shield buff that absorbs damage.
+
+        // Set Cooldown
 
         Debug.Log("Barrier Activated");
     }
 
-    // Ressurect, bring a fallen ally back to life
-    private void Resurrect(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
-            
-        animator.SetTrigger("A3");
+    // Resurrect
+    override public void A3(AbilitySettings settings)
+    {
+        // Bring a fallen ally back to life
+
+        // Set Cooldown
 
         Debug.Log("Resurrect Activated");
     }
 
-    // Holy Nova, an AoE heal around the Priest
-    private void HolyNova(int order, string prevKeyword) {
-        if (!isSelected)
-            return;
+    // Holy Nova
+    override public void A4(AbilitySettings settings)
+    {
+        // Deal damage to all enemies and heal all allies in an area around the Priest
 
-        animator.SetTrigger("A4");
+        // Set cooldown
+
         Debug.Log("Holy Nova Activated");
     }
 }

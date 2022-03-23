@@ -383,6 +383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1240609509300729210}
   - component: {fileID: 5176794390880497408}
+  - component: {fileID: 4305586457089473519}
   m_Layer: 0
   m_Name: Y-Bot Mesh
   m_TagString: Untagged
@@ -426,6 +427,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &4305586457089473519
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908496455017377728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edc2440665ead7c4981e42a12582f61e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2337459904878233562
 GameObject:
   m_ObjectHideFlags: 0
