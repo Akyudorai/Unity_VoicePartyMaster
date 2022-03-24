@@ -19,6 +19,13 @@ public class AnimationEventHandler : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
+    public void PlayAudioClip(string str) 
+    {
+        //Debug.Log(str);
+
+        audioSource.PlayOneShot(Resources.Load<AudioClip>(str));
+    }
+
     public void Attack()
     {
         if (DebugMe) Debug.Log("Attack() called");
@@ -48,7 +55,7 @@ public class AnimationEventHandler : MonoBehaviour
         // Generate the ability settings
         AbilitySettings settings;
         settings.owner = pc.entity;
-        settings.target = pc.target.GetComponent<PlayerController>().entity; // Change to entity or Enemy Class Rather than PC.entity
+        settings.target = (pc.target != null) ? pc.target.GetComponent<PlayerController>().entity : null; // Change to entity or Enemy Class Rather than PC.entity
 
         // Cast the Ability
         pc.GetCharacter().A1(settings);
@@ -58,7 +65,8 @@ public class AnimationEventHandler : MonoBehaviour
     {
         AbilitySettings settings;
         settings.owner = pc.entity;
-        settings.target = pc.target.GetComponent<PlayerController>().entity; // Change to entity or Enemy Class Rather than PC.entity
+        settings.target = (pc.target != null) ? pc.target.GetComponent<PlayerController>().entity : null; // Change to entity or Enemy Class Rather than PC.entity
+        
 
         // Cast the Ability
         pc.GetCharacter().A2(settings);
@@ -68,7 +76,7 @@ public class AnimationEventHandler : MonoBehaviour
     {
         AbilitySettings settings;
         settings.owner = pc.entity;
-        settings.target = pc.target.GetComponent<PlayerController>().entity; // Change to entity or Enemy Class Rather than PC.entity
+        settings.target = (pc.target != null) ? pc.target.GetComponent<PlayerController>().entity : null; // Change to entity or Enemy Class Rather than PC.entity
 
         // Cast the Ability
         pc.GetCharacter().A3(settings);
@@ -78,7 +86,7 @@ public class AnimationEventHandler : MonoBehaviour
     {
         AbilitySettings settings;
         settings.owner = pc.entity;
-        settings.target = pc.target.GetComponent<PlayerController>().entity; // Change to entity or Enemy Class Rather than PC.entity
+        settings.target = (pc.target != null) ? pc.target.GetComponent<PlayerController>().entity : null; // Change to entity or Enemy Class Rather than PC.entity
 
         // Cast the Ability
         pc.GetCharacter().A4(settings);

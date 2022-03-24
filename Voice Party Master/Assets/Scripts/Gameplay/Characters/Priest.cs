@@ -127,7 +127,14 @@ public class Priest : Character
     // Holy Nova
     override public void A4(AbilitySettings settings)
     {
-        // Deal damage to all enemies and heal all allies in an area around the Priest
+        // Create a Holy Nova
+        GameObject nova = GameObject.Instantiate(
+            Resources.Load<GameObject>("Prefabs/Priest/VFX_HolyNova"), 
+            settings.owner.GetOwner().transform.position,
+            Quaternion.identity
+            );
+
+        nova.GetComponent<HolyNova>().Initialize(settings);
 
         // Set cooldown
         AbilityData A4 = Abilities["A4"];
@@ -136,4 +143,13 @@ public class Priest : Character
 
         Debug.Log("Holy Nova Activated");
     }
+
+    override protected void A4_Buffer(int order, string prevKeyword)
+	{
+		if (!isSelected)            
+            return;        
+
+        animator.SetTrigger("A4");
+	}
+    
 }

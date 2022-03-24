@@ -96,10 +96,25 @@ public class Mage : Character
     }
 
     // Flame Burst
-    override public void A2(AbilitySettings settings) 
-    {
-        // Deal Damage to all targets in an area around the Mage
+    override protected void A2_Buffer(int order, string prevKeyword) 
+    {   
+        if (!isSelected)            
+            return;  
 
+        animator.SetTrigger("A2");
+    }
+     
+    override public void A2(AbilitySettings settings) 
+    {       
+        // Create a Flame Burst
+        GameObject burst = GameObject.Instantiate(
+            Resources.Load<GameObject>("Prefabs/Mage/VFX_FlameBurst"), 
+            settings.owner.GetOwner().transform.position,
+            Quaternion.identity
+            );
+        
+        burst.GetComponent<FlameBurst>().Initialize(settings);
+ 
         // Set Cooldown
         AbilityData A2 = Abilities["A2"];
         A2.currCD = A2.CD;

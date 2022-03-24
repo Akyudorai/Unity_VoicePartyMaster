@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private async void Update() 
+    private void Update() 
     {    
         if (entity.IsDead) return;
 

@@ -10,6 +10,8 @@ public class VoiceCommandSystem : MonoBehaviour
 {
     public static DictationRecognizer DR;
 
+    public SpeechSystemStatus status;
+
     void Start() 
     {
         VoiceCommands.Initialize();
@@ -44,7 +46,9 @@ public class VoiceCommandSystem : MonoBehaviour
     IEnumerator ControlVoiceRecog() 
     {
         while (true) 
-        {            
+        {       
+            status = DR.Status;
+
             if (DR.Status == SpeechSystemStatus.Stopped) 
             {
                 DR.Start();
