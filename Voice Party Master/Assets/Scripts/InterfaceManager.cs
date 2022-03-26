@@ -43,6 +43,19 @@ public class InterfaceManager : MonoBehaviour
 
 #endregion
 
+#region Room Data
+
+    public GameObject InteractablesListBase;
+    public GameObject InteractablesListParent;
+    public Text InteractablesList;
+    public GameObject EnemiesListBase;
+    public GameObject EnemiesListParent;
+    public Text EnemiesList;
+
+
+#endregion
+
+
     public void Initialize()
     {
         if (Warrior != null) {
@@ -72,7 +85,72 @@ public class InterfaceManager : MonoBehaviour
         A1_CD.fillAmount = selected.GetCharacter().Abilities["A1"].currCD / selected.GetCharacter().Abilities["A1"].CD;
         A2_CD.fillAmount = selected.GetCharacter().Abilities["A2"].currCD / selected.GetCharacter().Abilities["A2"].CD;
         A3_CD.fillAmount = selected.GetCharacter().Abilities["A3"].currCD / selected.GetCharacter().Abilities["A3"].CD;
-        A4_CD.fillAmount = selected.GetCharacter().Abilities["A4"].currCD / selected.GetCharacter().Abilities["A4"].CD;
+        A4_CD.fillAmount = selected.GetCharacter().Abilities["A4"].currCD / selected.GetCharacter().Abilities["A4"].CD;                
+    }
+
+    public void UpdateRoomData()
+    {   
+        // Dont want to update if we dont have a selection or a room to update.
+        if (selected == null || selected.GetRoom() == null) return;
+
+        // Update Interactables List
+        if (selected.GetRoom().ObjectsInRoom.Count > 0) {
+            if (!InteractablesListBase.activeInHierarchy) {
+                InteractablesListBase.SetActive(true);
+                InteractablesListParent.SetActive(true);
+            }
+
+            InteractablesList.text = "";
+            foreach (GameObject obj in selected.GetRoom().ObjectsInRoom)
+            {
+                InteractablesList.text += obj.name + "\n";
+            }
+
+            Canvas.ForceUpdateCanvases();
+            InteractablesListParent.GetComponent<ContentSizeFitter>().enabled = false;
+            InteractablesListParent.GetComponent<ContentSizeFitter>().enabled = true;
+        } else {
+            InteractablesListBase.SetActive(false);
+            InteractablesListParent.SetActive(false);
+        }
+        
+        // Update Enemies List
+        if (selected.GetRoom().EnemiesInRoom.Count > 0) {
+            if (!EnemiesListBase.activeInHierarchy) {
+                EnemiesListBase.SetActive(true);
+                EnemiesListParent.SetActive(true);
+            }
+
+            EnemiesList.text = "";
+            foreach (GameObject obj in selected.GetRoom().EnemiesInRoom)
+            {
+                EnemiesList.text += obj.name + "\n";
+            }
+
+            Canvas.ForceUpdateCanvases();
+            EnemiesListParent.GetComponent<ContentSizeFitter>().enabled = false;
+            EnemiesListParent.GetComponent<ContentSizeFitter>().enabled = true;
+        } else {
+            EnemiesListBase.SetActive(false);
+            EnemiesListParent.SetActive(false);
+        }
+        
+        
+        
+        
+        // Clear the list
+        // foreach (Transform child in EnemiesListParent)
+        // {
+        //     GameObject.Destroy(child.gameObject);
+        // }
+
+        // // // Populate the list
+        // foreach (GameObject obj in selected.GetRoom().EnemiesInRoom)
+        // {
+        //     GameObject textObj = Instantiate(textPrefab, Vector3.zero, Quaternion.identity);
+        //     textObj.transform.SetParent(EnemiesListParent);
+        //     textObj.GetComponent<Text>().text = obj.name;
+        // }
     }
 
     public void SelectCharacter(PlayerController pc)

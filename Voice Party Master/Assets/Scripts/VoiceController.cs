@@ -41,15 +41,15 @@ public class VoiceController : MonoBehaviour
         VoiceCommands.Commands.Add("sprint", new Action<int, string>(Sprint));
         VoiceCommands.Commands.Add("run", new Action<int, string>(Sprint));      
 
-        VoiceCommands.Commands.Add("middle", new Action<int,string>(MiddleRoom));
+        VoiceCommands.Commands.Add("hallway", new Action<int,string>(HallwayRoom));
         VoiceCommands.Commands.Add("boss", new Action<int,string>(BossRoom));
         VoiceCommands.Commands.Add("cellar", new Action<int,string>(CellarRoom));
         VoiceCommands.Commands.Add("armory", new Action<int,string>(ArmoryRoom));
-        VoiceCommands.Commands.Add("butcher", new Action<int,string>(ButcherRoom));
+        VoiceCommands.Commands.Add("bedroom", new Action<int,string>(BedRoom));
         VoiceCommands.Commands.Add("library", new Action<int,string>(LibraryRoom));
-        VoiceCommands.Commands.Add("treasure", new Action<int,string>(TreasureRoom));
-        VoiceCommands.Commands.Add("greenhouse", new Action<int,string>(GreenhouseRoom));
-        VoiceCommands.Commands.Add("gallery", new Action<int,string>(GalleryRoom));
+        VoiceCommands.Commands.Add("dining", new Action<int,string>(DiningRoom));
+        VoiceCommands.Commands.Add("garden", new Action<int,string>(GardenRoom));
+        VoiceCommands.Commands.Add("kitchen", new Action<int,string>(KitchenRoom));
 
         // Selection Input
         VoiceCommands.Commands.Add("warrior", new Action<int,string>(SelectWarrior));
@@ -136,6 +136,9 @@ public class VoiceController : MonoBehaviour
             selectedCharacter = warrior;
             im.SelectCharacter(warrior);
             selectedCharacter.GetCharacter().isSelected = true;
+
+            // Updates Room Data
+            GameObject.Find("UI").GetComponent<InterfaceManager>().UpdateRoomData();
         }
         
     }
@@ -149,6 +152,9 @@ public class VoiceController : MonoBehaviour
             selectedCharacter = priest;
             im.SelectCharacter(priest);
             selectedCharacter.GetCharacter().isSelected = true;
+
+            // Updates Room Data
+            GameObject.Find("UI").GetComponent<InterfaceManager>().UpdateRoomData();
         }
     }
 
@@ -161,6 +167,9 @@ public class VoiceController : MonoBehaviour
             selectedCharacter = rogue;
             im.SelectCharacter(rogue);
             selectedCharacter.GetCharacter().isSelected = true;
+
+            // Updates Room Data
+            GameObject.Find("UI").GetComponent<InterfaceManager>().UpdateRoomData();
         }
     }
 
@@ -173,6 +182,9 @@ public class VoiceController : MonoBehaviour
             selectedCharacter = mage;
             im.SelectCharacter(mage);
             selectedCharacter.GetCharacter().isSelected = true;
+
+            // Updates Room Data
+            GameObject.Find("UI").GetComponent<InterfaceManager>().UpdateRoomData();
         }
     }
 
@@ -185,6 +197,9 @@ public class VoiceController : MonoBehaviour
             selectedCharacter = archer;
             im.SelectCharacter(archer);
             selectedCharacter.GetCharacter().isSelected = true;
+
+            // Updates Room Data
+            GameObject.Find("UI").GetComponent<InterfaceManager>().UpdateRoomData();
         }
     }
 
@@ -213,10 +228,10 @@ public class VoiceController : MonoBehaviour
         
     }
 
-    private void MiddleRoom(int order, string prevKeyword) {
+    private void HallwayRoom(int order, string prevKeyword) {
         if (order > 0)
         {
-            selectedCharacter.SetDestinationTarget(gm.roomNav["middle"]);
+            selectedCharacter.SetDestinationTarget(gm.roomNav["hallway"]);
             selectedCharacter.SetAction(PlayerController.ACTION.MOVE);
         }
         
@@ -240,10 +255,10 @@ public class VoiceController : MonoBehaviour
         }        
     }
 
-    private void GalleryRoom(int order, string prevKeyword) {
+    private void BedRoom(int order, string prevKeyword) {
         
         if (order > 1) {
-            selectedCharacter.SetDestinationTarget(gm.roomNav["gallery"]);
+            selectedCharacter.SetDestinationTarget(gm.roomNav["bedroom"]);
             selectedCharacter.SetAction(PlayerController.ACTION.MOVE);
         }
     }
@@ -257,32 +272,33 @@ public class VoiceController : MonoBehaviour
         
     }
 
-    private void TreasureRoom(int order, string prevKeyword) {
+    private void DiningRoom(int order, string prevKeyword) {
         if (order > 1)
         {
-            selectedCharacter.SetDestinationTarget(gm.roomNav["treasure"]);
+            selectedCharacter.SetDestinationTarget(gm.roomNav["dining"]);
             selectedCharacter.SetAction(PlayerController.ACTION.MOVE);
         }
         
     }
 
-    private void ButcherRoom(int order, string prevKeyword) {
+    private void GardenRoom(int order, string prevKeyword) {
         if (order > 1)
         {
-            selectedCharacter.SetDestinationTarget(gm.roomNav["butcher"]);
+            selectedCharacter.SetDestinationTarget(gm.roomNav["garden"]);
             selectedCharacter.SetAction(PlayerController.ACTION.MOVE);
         }
         
     }
 
-    private void GreenhouseRoom(int order, string prevKeyword) {
+    private void KitchenRoom(int order, string prevKeyword) {
         if (order > 1)
         {
-            selectedCharacter.SetDestinationTarget(gm.roomNav["greenhouse"]);
+            selectedCharacter.SetDestinationTarget(gm.roomNav["kitchen"]);
             selectedCharacter.SetAction(PlayerController.ACTION.MOVE);
         }
         
     }
+
 
     private void Stop(int order, string prevKeyword) {       
         selectedCharacter.SetAction(PlayerController.ACTION.IDLE);             

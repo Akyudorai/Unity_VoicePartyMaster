@@ -61,7 +61,7 @@ public class BossController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         nmAgent = GetComponent<NavMeshAgent>();
-        animator = GetComponentInParent<Animator>();
+        animator = GetComponentInChildren<Animator>();
 
         // Initialize Entity
         entity = new Entity(1);
@@ -70,9 +70,7 @@ public class BossController : MonoBehaviour
 
     private void Update()
     {
-        // TEMP CONTROLS TO TEST ANIMATIONS
-        transform.position = new Vector3(animator.transform.position.x, animator.transform.position.y, animator.transform.position.z - 0.5f);
-
+        // TEMP CONTROLS TO TEST ANIMATIONS        
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             animator.SetInteger("MoveType", 0);

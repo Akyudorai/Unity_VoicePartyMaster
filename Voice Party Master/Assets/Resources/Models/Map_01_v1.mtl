@@ -1,0 +1,71 @@
+# Blender MTL File: 'Map_01.blend'
+# Material Count: 6
+
+newmtl Alpha_Body_MAT
+Ns 33.076915
+Ka 1.000000 1.000000 1.000000
+Kd 0.096570 0.421620 0.522000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Alpha_Joints_MAT
+Ns 18.000005
+Ka 0.500000 0.500000 0.500000
+Kd 0.153552 0.212894 0.222217
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+
+newmtl Material
+Ns 323.999994
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl eyes:eyes_lambert
+Ns 179.999996
+Ka 1.000000 1.000000 1.000000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\goblin_normal.png
+map_Kd D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\goblin_diffuse.png
+
+newmtl phong1
+Ns 179.999996
+Ka 0.500000 0.500000 0.500000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\goblin_normal.png
+map_Kd D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\goblin_diffuse.png
+map_Ks D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\goblin_specular.png
+
+newmtl warrok_MAT
+Ns 179.999996
+Ka 0.500000 0.500000 0.500000
+Kd 1.000000 1.000000 1.000000
+Ks 1.000000 1.000000 1.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Bump D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\bear_normal.png
+map_Kd D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\bear_diffuse.png
+map_Ks D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\bear_specular.png
+map_d D:\\Taskbar\\Projects\\Active\\Unity_VoicePartyMaster\\Voice Party Master\\Assets\\Resources\\bear_alpha.png
