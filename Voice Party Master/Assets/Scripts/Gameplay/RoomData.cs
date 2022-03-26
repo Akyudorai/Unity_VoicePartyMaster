@@ -55,16 +55,37 @@ public class RoomData : MonoBehaviour
         return output;
     }
 
+    private void RefreshRoomRenderables()
+    {
+        // Toggle the room renderable
+        renderable.enabled = (PlayersInRoom.Count > 0) ? true : false;
+
+        // Toggle all enemy renderables
+        foreach (GameObject obj in EnemiesInRoom) {
+            foreach (SkinnedMeshRenderer mr in obj.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                mr.enabled = (PlayersInRoom.Count > 0) ? true : false;
+            }                    
+        }
+
+        // Toggle all object renderables
+        foreach (GameObject obj in ObjectsInRoom) {
+            obj.GetComponent<MeshRenderer>().enabled = (PlayersInRoom.Count > 0) ? true : false;
+        }
+    }
+
     private void OnTriggerEnter(Collider c) 
     {        
         // If a player character steps into a room, set its current room state to this
         if (c.tag == "Player" && !PlayersInRoom.Contains(c.gameObject)) {
+            
+            // Set Room for Player
             c.gameObject.GetComponent<PlayerController>().SetRoom(this);
+            
+            // Add Player to Room
             PlayersInRoom.Add(c.gameObject);
 
-            if (!renderable.enabled) {
-                renderable.enabled = true;
-            }
+            // Toggle Renderables
+            RefreshRoomRenderables();
 
             // Updates Room Data
             GameObject.Find("UI").GetComponent<InterfaceManager>().UpdateRoomData();
@@ -75,6 +96,9 @@ public class RoomData : MonoBehaviour
         {
             // Add the enemy to room list
             EnemiesInRoom.Add(c.gameObject);
+
+            // Toggle Renderables
+            RefreshRoomRenderables();
 
             // Updates Enemy List
             GameObject.Find("UI").GetComponent<InterfaceManager>().UpdateRoomData();
@@ -88,9 +112,7 @@ public class RoomData : MonoBehaviour
             PlayersInRoom.Remove(c.gameObject);
         }   
 
-        // if there are no more players in the room, disable the renderable
-        if (PlayersInRoom.Count == 0) {
-            renderable.enabled = false;
-        }
+        // Toggle Renderables
+        RefreshRoomRenderables();        
     }
 }
