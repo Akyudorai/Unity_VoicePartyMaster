@@ -12,7 +12,7 @@ public class Warrior : Character
         {
             // Base Stats
             Movement_Speed = 1.0f,
-            Attack_Range = 2.5f,
+            Attack_Range = 4.0f,
             
             // Defensive Stats
             Health = 100.0f, 

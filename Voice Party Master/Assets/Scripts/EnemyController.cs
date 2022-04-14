@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 public class EnemyController : MonoBehaviour
 {
         // COMPONENTS
@@ -9,6 +10,9 @@ public class EnemyController : MonoBehaviour
     private Rigidbody rb; 
     private NavMeshAgent nmAgent;   
     private Animator animator;
+
+    [SerializeField] GameObject healthpanel;
+    [SerializeField] Image healthbar;
 
     public Animator GetAnimator() { return animator; }
 
@@ -30,7 +34,7 @@ public class EnemyController : MonoBehaviour
     {
         // Base Stats
         Movement_Speed = 1.0f,
-        Attack_Range = 2.5f,
+        Attack_Range = 4.0f,
         
         // Defensive Stats
         Health = 100.0f, 
@@ -56,6 +60,8 @@ public class EnemyController : MonoBehaviour
     public GameObject target; // ------------------  The Current Target of the Controller
     private float basicAttackTimer; // ------------------------------------  The timer that determines when the character can attack. 
 
+    private RoomData currentRoom;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -63,13 +69,26 @@ public class EnemyController : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
 
         // Initialize Entity
-        entity = new Entity(1);
+        entity = new Entity(stats.Health);
         entity.SetAnimator(animator);
+        entity.healthPanel = healthpanel;
+        entity.healthBar = healthbar;
+        entity.onDeath += DeathEvent;
+    }
+
+    private void DeathEvent() {
+        currentRoom.RemoveEnemy(this.gameObject);
+        nmAgent.SetDestination(transform.position);
+        SetAction(ACTION.IDLE);
     }
 
     private void Update()
     {
         if (entity.IsDead) return;
+
+        // HANDLE UI
+        ///////////////////////////////////////
+        healthpanel.transform.LookAt(Camera.main.transform.position);
 
         // HANDLE MOTION
         ///////////////////////////////////////
@@ -84,19 +103,50 @@ public class EnemyController : MonoBehaviour
         } else if (currentAction == ACTION.ENGAGE) 
         {       
             // While out of range, move towards the target     
-            if (Vector3.Distance(transform.position, target.transform.position) > stats.Attack_Range) 
+            if (Vector3.Distance(transform.position, nmAgent.destination) > stats.Attack_Range) 
             {
                 nmAgent.SetDestination(target.transform.position);
             } 
             
             // When in range, switch to attack action.
-            else if (Vector3.Distance(transform.position, target.transform.position) <= stats.Attack_Range) 
+            else if (Vector3.Distance(transform.position, nmAgent.destination) <= stats.Attack_Range) 
             {
-                SetAction(ACTION.ATTACK);              
+                SetAction(ACTION.ATTACK);   
             }
         }
             // HANDLE COMBAT
         ///////////////////////////////////////
+
+        // Look for players
+        if (currentRoom.PlayersInRoom.Count > 0) 
+        {
+            if (target == null || target.GetComponent<PlayerController>().entity.IsDead) 
+            {
+                // Find closest player
+                GameObject pc = null;
+
+                for (int i = 0; i < currentRoom.PlayersInRoom.Count; i++)
+                {
+                    if (pc == null) {
+                        pc = currentRoom.PlayersInRoom[i];
+                    }
+
+                    else {
+                        float currDist = Vector3.Distance(transform.position, pc.transform.position);
+                        float indexDist = Vector3.Distance(transform.position, currentRoom.PlayersInRoom[i].transform.position);
+
+                        if (indexDist < currDist) { 
+                            pc = currentRoom.PlayersInRoom[i];
+                        }
+                    }
+                }
+
+                // Engage It
+                SetTarget(pc);
+                SetDestinationTarget(pc.gameObject.transform.position);
+                SetAction(ACTION.ENGAGE);
+            }
+        }
 
         // Attack Speed Timer
         if (basicAttackTimer > 0) { 
@@ -109,15 +159,19 @@ public class EnemyController : MonoBehaviour
         }
 
         // Declare an attack
-        if (currentAction == ACTION.ATTACK) {            
+        if (currentAction == ACTION.ATTACK) {     
+
+            if (Vector3.Distance(transform.position, target.transform.position) > stats.Attack_Range) {
+                SetAction(ACTION.ENGAGE);
+            }
+
+
             if (basicAttackTimer <= 0) {
                 // Damage the target
                 //float amount = (character.GetDamageType() == PrimaryDamageType.Physical) ? character.GetStats().Attack_Power * 1.0f : character.GetStats().Spell_Power * 0.35f;                
                 //target.GetComponent<PlayerController>().entity.DealDamage(amount);
                 basicAttackTimer = stats.Attack_Speed;
-                animator.SetTrigger("Attack");
-
-                
+                animator.SetTrigger("Attack");                
             }
         }
     }
@@ -175,7 +229,9 @@ public class EnemyController : MonoBehaviour
 
         if (entity.IsDead) return;
 
-        nmAgent.SetDestination(target);
+        Vector3 destination = target - (target - transform.position).normalized * 1.5f;
+        nmAgent.SetDestination(destination);
+    
         currentAction = ACTION.MOVE;
         SetMovementSpeed(MOVEMENT.RUN);
     }
@@ -215,6 +271,11 @@ public class EnemyController : MonoBehaviour
     // UTILITIES
     ////////////////////////////////////////////////////
 
+    public void SetRoom(RoomData room) 
+    {   
+        currentRoom = room;
+    }
+
     // Get a relative direction based on target direction
     private Vector3 GetDirection(DIRECTION direction) {
         switch (direction) {
@@ -235,8 +296,14 @@ public class EnemyController : MonoBehaviour
 
     private void OnDrawGizmos() {
         if (stats != null) {
+            // Attack Range
             Gizmos.DrawWireSphere(transform.position, stats.Attack_Range);
         }
         
+        if (Application.isPlaying)
+        {   
+            // nmAgent Destination Point
+            Gizmos.DrawSphere(nmAgent.destination, 0.4f);
+        }
     }
 }

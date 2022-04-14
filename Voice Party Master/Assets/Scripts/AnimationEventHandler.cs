@@ -35,8 +35,15 @@ public class AnimationEventHandler : MonoBehaviour
         
             // Deal Damage to Target
             float amount = (pc.GetCharacter().GetDamageType() == PrimaryDamageType.Physical) 
-                ? pc.GetCharacter().GetStats().Attack_Power * 1.0f : pc.GetCharacter().GetStats().Spell_Power * 0.35f;                
-            pc.target.GetComponent<PlayerController>().entity.DealDamage(amount); // Change to Entity or Enemy Class rather han PC.entity
+                ? pc.GetCharacter().GetStats().Attack_Power * 1.0f : pc.GetCharacter().GetStats().Spell_Power * 0.35f;    
+
+            if (pc.target.GetComponent<PlayerController>() != null) {
+                pc.target.GetComponent<PlayerController>().entity.DealDamage(amount);
+            } else if (pc.target.GetComponent<EnemyController>() != null) {
+                pc.target.GetComponent<EnemyController>().entity.DealDamage(amount);
+            } else if (pc.target.GetComponent<BossController>() != null) {
+                pc.target.GetComponent<BossController>().entity.DealDamage(amount);
+            }
 
             // Alternate Attack Animation
             if (pc.characterClass == CharacterClass.Rogue) {
@@ -55,8 +62,16 @@ public class AnimationEventHandler : MonoBehaviour
         // Generate the ability settings
         AbilitySettings settings;
         settings.owner = pc.entity;
-        settings.target = (pc.target != null) ? pc.target.GetComponent<PlayerController>().entity : null; // Change to entity or Enemy Class Rather than PC.entity
-
+        
+        if (pc.target.GetComponent<PlayerController>() != null) {
+            settings.target = pc.target.GetComponent<PlayerController>().entity;
+        } else if (pc.target.GetComponent<EnemyController>() != null) {
+            settings.target = pc.target.GetComponent<EnemyController>().entity;
+        } else if (pc.target.GetComponent<BossController>() != null) {
+            settings.target = pc.target.GetComponent<BossController>().entity;
+        } else {
+            settings.target = null;
+        }
         // Cast the Ability
         pc.GetCharacter().A1(settings);
     }
@@ -65,8 +80,17 @@ public class AnimationEventHandler : MonoBehaviour
     {
         AbilitySettings settings;
         settings.owner = pc.entity;
-        settings.target = (pc.target != null) ? pc.target.GetComponent<PlayerController>().entity : null; // Change to entity or Enemy Class Rather than PC.entity
         
+        if (pc.target.GetComponent<PlayerController>() != null) {
+            settings.target = pc.target.GetComponent<PlayerController>().entity;
+        } else if (pc.target.GetComponent<EnemyController>() != null) {
+            settings.target = pc.target.GetComponent<EnemyController>().entity;
+        } else if (pc.target.GetComponent<BossController>() != null) {
+            settings.target = pc.target.GetComponent<BossController>().entity;
+        } else {
+            settings.target = null;
+        }
+
 
         // Cast the Ability
         pc.GetCharacter().A2(settings);
@@ -76,8 +100,16 @@ public class AnimationEventHandler : MonoBehaviour
     {
         AbilitySettings settings;
         settings.owner = pc.entity;
-        settings.target = (pc.target != null) ? pc.target.GetComponent<PlayerController>().entity : null; // Change to entity or Enemy Class Rather than PC.entity
-
+        
+        if (pc.target.GetComponent<PlayerController>() != null) {
+            settings.target = pc.target.GetComponent<PlayerController>().entity;
+        } else if (pc.target.GetComponent<EnemyController>() != null) {
+            settings.target = pc.target.GetComponent<EnemyController>().entity;
+        } else if (pc.target.GetComponent<BossController>() != null) {
+            settings.target = pc.target.GetComponent<BossController>().entity;
+        } else {
+            settings.target = null;
+        }
         // Cast the Ability
         pc.GetCharacter().A3(settings);
     }
@@ -86,9 +118,27 @@ public class AnimationEventHandler : MonoBehaviour
     {
         AbilitySettings settings;
         settings.owner = pc.entity;
-        settings.target = (pc.target != null) ? pc.target.GetComponent<PlayerController>().entity : null; // Change to entity or Enemy Class Rather than PC.entity
+        
+        if (pc.target.GetComponent<PlayerController>() != null) {
+            settings.target = pc.target.GetComponent<PlayerController>().entity;
+        } else if (pc.target.GetComponent<EnemyController>() != null) {
+            settings.target = pc.target.GetComponent<EnemyController>().entity;
+        } else if (pc.target.GetComponent<BossController>() != null) {
+            settings.target = pc.target.GetComponent<BossController>().entity;
+        } else {
+            settings.target = null;
+        }
 
         // Cast the Ability
         pc.GetCharacter().A4(settings);
+    }
+
+    public void Investigate()
+    {
+        
+        pc.Investigate();
+        pc.target.GetComponent<InteractionData>().hasBeenInteractedWith = true;
+
+        pc.SetAction(PlayerController.ACTION.INVESTIGATING);
     }
 }

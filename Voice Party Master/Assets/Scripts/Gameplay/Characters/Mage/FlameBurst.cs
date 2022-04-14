@@ -77,8 +77,14 @@ public class FlameBurst : MonoBehaviour
                     // Damage all targets with the enemy tag
                     if (go.tag == "Enemy") 
                     {
-                        // Deal Damage to the Target based on Spell Power                                     
-                        go.GetComponent<EnemyController>().entity.DealDamage(amount);                            
+                        // Deal Damage to the Target based on Spell Power 
+                        if (go.GetComponent<EnemyController>() != null) {
+                            go.GetComponent<EnemyController>().entity.DealDamage(amount);
+                        }                                    
+
+                        else if (go.GetComponent<BossController>() != null) {
+                            go.GetComponent<BossController>().entity.DealDamage(amount);
+                        }
                     }                  
                 }
             }
